@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-11 20:12-0600\n"
+"POT-Creation-Date: 2020-11-11 21:05-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,15 +18,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: bedu_songs/schema.py:17
+#: config/schema.py:17
 msgid "¡Hola mundo!"
 msgstr "Hello World!"
 
-#: bedu_songs/settings.py:115
+#: config/settings/base.py:119
 msgid "Español"
 msgstr "Spanish"
 
-#: bedu_songs/settings.py:116
+#: config/settings/base.py:120
 msgid "Inglés"
 msgstr "English"
 

@@ -6,13 +6,19 @@ from pathlib import Path
 
 from django.utils.translation import gettext_lazy as _
 
+import environ
+
 
 # General
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = '2#4pdp!g97z#f!6_r*-8m$eark=kvupo$7ruj-z5z7mq*3m#4#'
-DEBUG = True
-ALLOWED_HOSTS = []
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+env = environ.Env()
+
+READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=False)
+if READ_DOT_ENV_FILE:
+    env.read_env(str(BASE_DIR / ".env"))
+
+DEBUG = env.bool("DJANGO_DEBUG", False)
 
 # Apps
 
@@ -26,8 +32,8 @@ DJANGO_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
-    'django_extensions',
     'graphene_django',
+    'corsheaders',
 ]
 
 LOCAL_APPS = [
@@ -40,7 +46,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware', # Locale Middleware
+    'django.middleware.locale.LocaleMiddleware',  # Locale Middleware
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -48,7 +54,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'bedu_songs.urls'
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
@@ -69,23 +75,21 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'bedu_songs.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    "default": env.db("DATABASE_URL", default="postgres:///bedu_deploy")
 }
+DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
 
 # Passwords
 
 PASSWORD_HASHERS = [
-    'django.contrib.auth.hashers.Argon2PasswordHasher', # Using argon
+    'django.contrib.auth.hashers.Argon2PasswordHasher',  # Using argon
     'django.contrib.auth.hashers.PBKDF2PasswordHasher',
     'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
@@ -130,17 +134,15 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-
+STATIC_ROOT = BASE_DIR / "staticfiles"
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
-
-
-# Media
-
-MEDIA_ROOT = BASE_DIR / 'media'
-MEDIA_URL = '/media/'
+STATICFILES_FINDERS = [
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+]
 
 
 # Authentication
@@ -154,11 +156,21 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
+# Security
+SESSION_COOKIE_HTTPONLY = True
+CSRF_COOKIE_HTTPONLY = True
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = "DENY"
+
 
 # GraphQL
 GRAPHENE = {
-    "SCHEMA": "bedu_songs.schema.schema",
+    "SCHEMA": "config.schema.schema",
     'MIDDLEWARE': [
         'graphql_jwt.middleware.JSONWebTokenMiddleware',
     ],
 }
+
+# CORS Headers
+
+CORS_ALLOW_ALL_ORIGINS = True
