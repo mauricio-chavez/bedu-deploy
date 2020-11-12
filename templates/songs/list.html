@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+  <section class="section">
+    <div class="container">
+      <h1 class="title">{% translate "Álbumes" %}</h1>
+      <div class="buttons">
+        <a role="button" href="{% url 'songs:create_album' %}" class="button is-link">{% translate "Nuevo álbum" %}</a>
+        <a role="button" href="{% url 'users:logout' %}" class="button is-danger">{% translate "Cerrar Sesión" %}</a>
+      </div>
+    </div>
+    <div class="container">
+      <div class="columns is-multiline is-mobile mt-5">
+        {% for album in album_list %}
+        <div class="column is-3">
+          <div class="card">
+            <div class="card-image">
+              <figure class="image">
+                <img src="{{ album.cover.url }}" alt="{{ album.name }}">
+              </figure>
+            </div>
+            <div class="card-content">      
+              <h3 class="subtitle has-text-centered">{{ album.name }}</h3>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>  
+    </div>
+  </section>
+{% endblock content %}

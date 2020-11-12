@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <h1 class="title">{% translate "Nuevo álbum" %}</h1>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="columns">
+        <div class="column">
+          <div class="field">
+            <label class="label">{% translate "Nombre" %}</label>
+            <div class="control has-icons-left">
+              <input
+                class="input"
+                type="text"
+                name="name"
+                {% if form.errors %}value="{{ form.name.value }}"{%endif%}
+              />
+              <span class="icon is-small is-left">
+                <i class="fas fa-record-vinyl"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="field">
+            <label class="label">{% translate "Portada" %}</label>
+            <div class="file">
+              <label class="file-label">
+                <input
+                  class="file-input"
+                  type="file"
+                  name="cover"
+                  accept="img/*"
+                />
+                <span class="file-cta">
+                  <span class="file-icon">
+                    <i class="fas fa-upload"></i>
+                  </span>
+                  <span class="file-label">
+                    {% translate "Sube una imagen" %}…
+                  </span>
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="buttons">
+        <button class="button is-link">
+          <span class="icon">
+            <i class="fas fa-paper-plane"></i>
+          </span>
+          <span>{% translate "Enviar" %}</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock content %}

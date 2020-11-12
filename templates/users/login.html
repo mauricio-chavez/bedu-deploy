@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block meta %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}" />
+{% endblock meta %}
+
+{% block title %}
+<title>{% translate "Iniciar Sesión" %}</title>
+{% endblock title %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <h1 class="title">{% translate "Iniciar Sesión" %}</h1>
+
+    {% for error in form.non_field_errors %}
+    <div class="notification is-danger">
+      <button class="delete"></button>
+      {{ error }}
+    </div>
+    {% endfor %}
+
+    <div class="card">
+      <div class="card-content">
+        <form method="post">
+          {% csrf_token %}
+          <div class="field">
+            <label class="label">{% translate "Correo Electrónico" %}</label>
+            <div class="control has-icons-left">
+              <input
+                class="input"
+                type="email"
+                name="username"
+                {% if form.errors %}value="{{ form.username.value }}"{%endif%}
+              />
+              <span class="icon is-small is-left">
+                <i class="fas fa-envelope"></i>
+              </span>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">{% translate "Contraseña" %}</label>
+            <div class="control has-icons-left">
+              <input
+                class="input"
+                type="password"
+                name="password"
+                {% if form.errors %}value="{{ form.password.value }}"{%endif%}
+              />
+              <span class="icon is-small is-left">
+                <i class="fas fa-lock"></i>
+              </span>
+            </div>
+          </div>
+          <div class="field is-grouped">
+            <p class="control">
+              <button class="button is-link is-rounded">
+                <span class="icon">
+                  <i class="fas fa-paper-plane"></i>
+                </span>
+                <span>{% translate "Enviar" %}</span>
+              </button>
+            </p>
+            {% if not form.errors %}
+            <p class="control">
+              <button class="button is-rounded" type="reset">
+                <span class="icon">
+                  <i class="fas fa-trash"></i>
+                </span>
+                <span>{% translate "Reiniciar" %}</span>
+              </button>
+            </p>
+            {% endif %}  
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    (document.querySelectorAll('.notification .delete') || []).forEach(
+      $delete => {
+        var $notification = $delete.parentNode;
+
+        $delete.addEventListener('click', () => {
+          $notification.parentNode.removeChild($notification);
+        });
+      }
+    );
+  });
+</script>
+{% endblock scripts %}
